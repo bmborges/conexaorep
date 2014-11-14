@@ -5,15 +5,26 @@
  */
 package Ah10.principal;
 
+import Ah10.comandos.CmdAfd;
+import Ah10.comandos.CmdDorme;
+import Ah10.comandos.CmdNsr;
+import Ah10.comandos.CmdStatus;
+import Ah10.comandos.ReqIni;
+import Ah10.dao.Fpg_Importaponto_AhgoraDao;
+import Ah10.dao.Fpg_Ponto_AhgoraDao;
+import com.google.gson.Gson;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +47,7 @@ public class ConexaoRep extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, Exception {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
@@ -48,8 +59,6 @@ public class ConexaoRep extends HttpServlet {
             String senhaRep = nrRep.split(":")[1];
             nrRep = nrRep.split(":")[0];
             nrRep = Long.parseLong(nrRep) + "";
-            System.out.println("nrRep " + nrRep);
-            
             
             InputStream is = request.getInputStream();
             ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -63,19 +72,82 @@ public class ConexaoRep extends HttpServlet {
             s = s.replaceFirst("^[^{]+", "");
             s = s.replaceAll("[^}]+$", "").trim();
             
-            System.out.println(s);
-            System.out.println("");
+                        
+            Gson gson = new Gson();
+            ReqIni ini = new ReqIni();
+            CmdDorme dorme = new CmdDorme();
+            CmdNsr nsr = new CmdNsr();
             
-            if (s.contains("ini")){
+            ini = gson.fromJson(s, ReqIni.class);
+            
+            if (ini.getReq().equalsIgnoreCase("ini")){
+                System.out.println(Calendar.getInstance().getTime());
+                System.out.println("nrRep " + nrRep);
+                
+                out.println(gson.toJson(nsr));
+                
                 //out.println("{\"cmd\":\"empresa\"}");
-                out.println("{\"cmd\":\"status\"}");
+                //out.println("{\"cmd\":\"status\"}");
                 //out.println("{\"cmd\":\"pede_dados_PIS\",\"PIS\":\"13634611315\"}");
                 //out.println("{\"cmd\":\"lista_PIS\"}");
+            } else if (ini.getReq().equalsIgnoreCase("status")){
+                // verifica status
+                CmdStatus status = new CmdStatus();
+                
+                status = gson.fromJson(s, CmdStatus.class);
+                System.out.println("IP: " + status.getIP());
+                System.out.println("Printer: " + status.getPrinter());
+                System.out.println("REP: " + status.getREP());
+                
+                out.println(gson.toJson(dorme));
+            } else if (ini.getReq().equalsIgnoreCase("empresa")){
+                if (ini.getResp().equalsIgnoreCase("ok")){
+                    System.out.println(s);
+                    out.println(gson.toJson(dorme));
+                }
+            } else if (ini.getReq().equalsIgnoreCase("NSR")){
+                if (ini.getResp().equalsIgnoreCase("ok")){
+                    // verifica ultimo registro rep
+                    //System.out.println(s);
+                    Fpg_Ponto_AhgoraDao dao = new Fpg_Ponto_AhgoraDao();
+                    CmdAfd afd = new CmdAfd();
+                    
+                    Integer nsr_ini = dao.UltimoNsr(nrRep);
+                    Integer nsr_fim = ini.getNsr();
+                    if (nsr_ini == 0){
+                        nsr_ini = ini.getNsr();
+                    }
+                    if (nsr_fim > nsr_ini + 50){
+                        nsr_fim = nsr_ini + 50;
+                    }
+                    afd.setNsr_ini(nsr_ini);
+                    afd.setNsr_fim(nsr_fim);
+                    if (nsr_fim > nsr_ini){
+                        System.out.println(gson.toJson(afd));
+                        out.println(gson.toJson(afd));
+                    } else {
+                        out.println(gson.toJson(dorme));
+                    }
+                }
+                
+            } else if (ini.getReq().equalsIgnoreCase("AFD")){    
+                if (ini.getResp().equalsIgnoreCase("ok")){
+                    // pesquisa registros rep
+                    //System.out.println(s);
+                    Fpg_Importaponto_AhgoraDao dao = new Fpg_Importaponto_AhgoraDao();
+                    if (ini.getRegistros() != null && ini.getRegistros().length > 0){
+                        for (int i = 0; i < ini.getRegistros().length; i++) {
+                            //grava os pontos coletados
+                            System.out.println(ini.getRegistros()[i]);
+                            dao.Importar(ini.getRegistros()[i]);
+                        }
+                    }
+                    out.println(gson.toJson(dorme));
+                }
+            } else {
+                System.out.println("Comando não Identificado");
+                System.out.println(s);
             }
-            if (!s.contains("ini")){
-                out.println("{\"cmd\":\"dorme\"}");
-            }
-
         }
     }
 
@@ -92,7 +164,11 @@ public class ConexaoRep extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(ConexaoRep.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -106,7 +182,11 @@ public class ConexaoRep extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(ConexaoRep.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
