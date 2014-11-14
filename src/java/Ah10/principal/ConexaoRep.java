@@ -5,12 +5,18 @@
  */
 package Ah10.principal;
 
+import Ah10.comandos.CmdDorme;
+import Ah10.comandos.CmdNsr;
+import Ah10.comandos.CmdStatus;
+import Ah10.comandos.ReqIni;
+import com.google.gson.Gson;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,8 +54,6 @@ public class ConexaoRep extends HttpServlet {
             String senhaRep = nrRep.split(":")[1];
             nrRep = nrRep.split(":")[0];
             nrRep = Long.parseLong(nrRep) + "";
-            System.out.println("nrRep " + nrRep);
-            
             
             InputStream is = request.getInputStream();
             ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -63,19 +67,40 @@ public class ConexaoRep extends HttpServlet {
             s = s.replaceFirst("^[^{]+", "");
             s = s.replaceAll("[^}]+$", "").trim();
             
-            System.out.println(s);
-            System.out.println("");
+                        
+            Gson gson = new Gson();
+            ReqIni ini = new ReqIni();
+            CmdDorme dorme = new CmdDorme();
+            CmdNsr nsr = new CmdNsr();
             
-            if (s.contains("ini")){
+            ini = gson.fromJson(s, ReqIni.class);
+            
+            if (ini.getReq().equalsIgnoreCase("ini")){
+                System.out.println(Calendar.getInstance().getTime());
+                System.out.println("nrRep " + nrRep);
+                
+                out.println(gson.toJson(nsr));
+                
                 //out.println("{\"cmd\":\"empresa\"}");
-                out.println("{\"cmd\":\"status\"}");
+                //out.println("{\"cmd\":\"status\"}");
                 //out.println("{\"cmd\":\"pede_dados_PIS\",\"PIS\":\"13634611315\"}");
                 //out.println("{\"cmd\":\"lista_PIS\"}");
+            } else if (ini.getReq().equalsIgnoreCase("status")){
+                CmdStatus status = new CmdStatus();
+                status = gson.fromJson(s, CmdStatus.class);
+                System.out.println("IP: " + status.getIP());
+                System.out.println("Printer: " + status.getPrinter());
+                System.out.println("REP: " + status.getREP());
+                
+                out.println(gson.toJson(dorme));
+            } else if (ini.getReq().equalsIgnoreCase("empresa")){                
+                System.out.println(s);
+                out.println(gson.toJson(dorme));
+            } else if (ini.getReq().equalsIgnoreCase("NSR")){
+                System.out.println(s);
+            } else {
+                
             }
-            if (!s.contains("ini")){
-                out.println("{\"cmd\":\"dorme\"}");
-            }
-
         }
     }
 
