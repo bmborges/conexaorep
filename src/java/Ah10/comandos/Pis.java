@@ -10,19 +10,19 @@ package Ah10.comandos;
  * @author bruno
  */
 public class Pis {
-    private String pis = null;
+    private String PIS = null;
 
     /**
      * @return the Pis
      */
-    public String getPis() {
-        return pis;
+    public String getPIS() {
+        return PIS;
     }
 
     /**
      * @param Pis the Pis to set
      */
-    public void setPis(String pis) {
-        this.pis = pis;
+    public void setPIS(String PIS) {
+        this.PIS = PIS;
     }
 }

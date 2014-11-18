@@ -29,10 +29,11 @@ public class Fpg_Importaponto_AhgoraDao {
         this.conn = conn;
     }
     
-    public void Importar(String registro) throws SQLException{
-        String query = "select fpg_importaponto_ahgora(?,'conexaorep',null);";
+    public void Importar(String registro, String nro_rep) throws SQLException{
+        String query = "select fpg_importaponto_ahgora(?,'conexaorep',null,?);";
         stmt = conn.prepareStatement(query);
         stmt.setString(1, registro);
+        stmt.setString(2, nro_rep);
         
         rs = stmt.executeQuery();
         if(rs.next()){

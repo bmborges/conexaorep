@@ -13,23 +13,23 @@ import java.util.ArrayList;
  */
 public class CmdCfg_Funcionario {
     private String cmd = null;
-    private ArrayList<Funcionario> funcionarios = null;
+    private ArrayList<Funcionario> Funcionarios = null;
 
     public CmdCfg_Funcionario() {
-        this.cmd = "cfg_funcionario";
+        this.cmd = "cfg_funcionarios";
     }
 
     /**
      * @return the funcionarios
      */
     public ArrayList<Funcionario> getFuncionarios() {
-        return funcionarios;
+        return Funcionarios;
     }
 
     /**
      * @param funcionarios the funcionarios to set
      */
-    public void setFuncionarios(ArrayList<Funcionario> funcionarios) {
-        this.funcionarios = funcionarios;
+    public void setFuncionarios(ArrayList<Funcionario> Funcionarios) {
+        this.Funcionarios = Funcionarios;
     }    
 }

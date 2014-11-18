@@ -11,7 +11,7 @@ package Ah10.comandos;
  */
 public class CmdPede_Dados_PIS {
     String cmd = null;
-    private String pis = "";
+    private String PIS = "";
 
     public CmdPede_Dados_PIS() {
         this.cmd = "pede_dados_PIS";
@@ -21,14 +21,14 @@ public class CmdPede_Dados_PIS {
      * @return the pis
      */
     public String getPis() {
-        return pis;
+        return PIS;
     }
 
     /**
      * @param pis the pis to set
      */
     public void setPis(String pis) {
-        this.pis = pis;
+        this.PIS = pis;
     }
     
     

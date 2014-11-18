@@ -12,6 +12,8 @@ import Ah10.comandos.CmdStatus;
 import Ah10.comandos.ReqIni;
 import Ah10.dao.Fpg_Importaponto_AhgoraDao;
 import Ah10.dao.Fpg_Ponto_AhgoraDao;
+import Ah10.dao.Fpg_Ponto_CmdPendenteDao;
+import Ah10.vo.Fpg_Ponto_CmdPendenteVO;
 import com.google.gson.Gson;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,9 +21,11 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +40,7 @@ import sun.misc.BASE64Decoder;
  * @author root
  */
 public class ConexaoRep extends HttpServlet {
+    List l = new ArrayList<Fpg_Ponto_CmdPendenteVO>();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -84,7 +89,25 @@ public class ConexaoRep extends HttpServlet {
                 System.out.println(Calendar.getInstance().getTime());
                 System.out.println("nrRep " + nrRep);
                 
-                out.println(gson.toJson(nsr));
+                Fpg_Ponto_CmdPendenteDao dao = new Fpg_Ponto_CmdPendenteDao();
+                if (l.size() == 0) {
+                    System.out.println("Pesquisando Comando(s) Pendente(s) REP " + nrRep);
+                    l = dao.VerificaCmdPendente(nrRep);
+                    out.println(gson.toJson(nsr));
+                } else if (l.size() > 0){
+                    System.out.println("Executando Comando(s) Pendente(s)");
+                    for (int i = 0; i < l.size(); i++) {
+                        Fpg_Ponto_CmdPendenteVO vo = (Fpg_Ponto_CmdPendenteVO) l.get(i);
+                        if (vo.getNmcomando().equalsIgnoreCase("exclui_funcionarios")){
+                            out.println(gson.toJson(dao.exclui_funcionario(vo)));
+                        } else if (vo.getNmcomando().equalsIgnoreCase("cfg_funcionarios")){
+                            out.println(gson.toJson(dao.cfg_funcionario(vo)));
+                        } else if (vo.getNmcomando().equalsIgnoreCase("pede_dados_pis")){
+                            out.println(gson.toJson(dao.pede_dados_pis(vo)));                
+                        }
+                    }
+                    l = new ArrayList<Fpg_Ponto_CmdPendenteVO>();
+                }
                 
                 //out.println("{\"cmd\":\"empresa\"}");
                 //out.println("{\"cmd\":\"status\"}");
@@ -109,6 +132,7 @@ public class ConexaoRep extends HttpServlet {
                 if (ini.getResp().equalsIgnoreCase("ok")){
                     // verifica ultimo registro rep
                     //System.out.println(s);
+                    System.out.println("Pesquisando Batidas REP " + nrRep);
                     Fpg_Ponto_AhgoraDao dao = new Fpg_Ponto_AhgoraDao();
                     CmdAfd afd = new CmdAfd();
                     
@@ -139,10 +163,26 @@ public class ConexaoRep extends HttpServlet {
                         for (int i = 0; i < ini.getRegistros().length; i++) {
                             //grava os pontos coletados
                             System.out.println(ini.getRegistros()[i]);
-                            dao.Importar(ini.getRegistros()[i]);
+                            dao.Importar(ini.getRegistros()[i], nrRep);
                         }
                     }
                     out.println(gson.toJson(dorme));
+                }
+           } else if (ini.getReq().equalsIgnoreCase("cfg_funcionarios")){    
+                if (ini.getResp().equalsIgnoreCase("ok")){
+                    out.println(gson.toJson(dorme));
+                }
+           } else if (ini.getReq().equalsIgnoreCase("pede_dados_PIS")){    
+                if (ini.getResp().equalsIgnoreCase("ok")){
+                    // pesquisa registros dados pelo pis
+                    System.out.println(s);
+                }                
+            } else if (ini.getReq().equalsIgnoreCase("exclui_funcionarios")){ 
+                if (ini.getResp().equalsIgnoreCase("ok")){
+                    out.println(gson.toJson(dorme));
+                } else {
+                    System.out.println("Erro ao Executar Comando");
+                    System.out.println(s);
                 }
             } else {
                 System.out.println("Comando não Identificado");

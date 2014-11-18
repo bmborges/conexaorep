@@ -13,23 +13,23 @@ import java.util.ArrayList;
  */
 public class CmdExclui_Funcionario {
     private String cmd = null;
-    private ArrayList<Pis> funcionarios = null; 
+    private ArrayList<Pis> Funcionarios = null; 
 
     public CmdExclui_Funcionario() {
-        this.cmd = "exclui_funcionario";
+        this.cmd = "exclui_funcionarios";
     }
 
     /**
      * @return the funcionarios
      */
     public ArrayList<Pis> getFuncionarios() {
-        return funcionarios;
+        return Funcionarios;
     }
 
     /**
      * @param funcionarios the funcionarios to set
      */
-    public void setFuncionarios(ArrayList<Pis> funcionarios) {
-        this.funcionarios = funcionarios;
+    public void setFuncionarios(ArrayList<Pis> Funcionarios) {
+        this.Funcionarios = Funcionarios;
     }    
 }

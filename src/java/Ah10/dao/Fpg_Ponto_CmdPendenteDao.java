@@ -88,7 +88,7 @@ public class Fpg_Ponto_CmdPendenteDao {
         ArrayList<Pis> aPis = new ArrayList<Pis>();
         while(rs.next()){
             Pis pis = new Pis();
-            pis.setPis(rs.getString("pis"));
+            pis.setPIS(rs.getString("pis"));
             aPis.add(pis);
             
             stmt = conn.prepareStatement(qUpdate);
@@ -109,7 +109,8 @@ public class Fpg_Ponto_CmdPendenteDao {
         CmdCfg_Funcionario cmd = new CmdCfg_Funcionario();
         
         String query = "select * from fpg_ponto_cmdpendente where upper(pendente) = 'V' and nro_rep = ? and nmcomando = ?";
-        String qUpdate = "update fpg_ponto_cmdpendente set nmcomando = 'pede_dados_PIS' where id_cmdpendente = ?";
+//        String qUpdate = "update fpg_ponto_cmdpendente set nmcomando = 'pede_dados_PIS' where id_cmdpendente = ?";
+        String qUpdate = "update fpg_ponto_cmdpendente set pendente = 'F' where id_cmdpendente = ?";
         stmt = conn.prepareStatement(query);
         stmt.setString(1, vo.getNro_rep());
         stmt.setString(2, vo.getNmcomando());

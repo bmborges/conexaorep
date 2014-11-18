@@ -10,124 +10,124 @@ package Ah10.comandos;
  * @author bruno
  */
 public class Funcionario {
-    private String nome = "";
-    private String codbarras = "";
-    private String[] mifaredado = new String[]{};
-    private Integer tempo = null;
-    private String biodados = "";
-    private String id = "";
-    private String pis = "";
-    private String passwd = "";
+    private String Nome = "";
+    private String CodBarras = "";
+    private String MiFareDado = "";
+    private Integer Tempo = null;
+    private String BioDados = "";
+    private String ID = "";
+    private String PIS = "";
+    private String Passwd = "";
 
     /**
      * @return the nome
      */
     public String getNome() {
-        return nome;
+        return Nome;
     }
 
     /**
      * @param nome the nome to set
      */
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNome(String Nome) {
+        this.Nome = Nome;
     }
 
     /**
      * @return the codbarras
      */
     public String getCodbarras() {
-        return codbarras;
+        return CodBarras;
     }
 
     /**
      * @param codbarras the codbarras to set
      */
-    public void setCodbarras(String codbarras) {
-        this.codbarras = codbarras;
+    public void setCodbarras(String CodBarras) {
+        this.CodBarras = CodBarras;
     }
 
     /**
      * @return the mifaredado
      */
-    public String[] getMifaredado() {
-        return mifaredado;
+    public String getMifaredado() {
+        return MiFareDado;
     }
 
     /**
      * @param mifaredado the mifaredado to set
      */
-    public void setMifaredado(String[] mifaredado) {
-        this.mifaredado = mifaredado;
+    public void setMifaredado(String mifaredado) {
+        this.MiFareDado = mifaredado;
     }
 
     /**
      * @return the tempo
      */
     public Integer getTempo() {
-        return tempo;
+        return Tempo;
     }
 
     /**
      * @param tempo the tempo to set
      */
     public void setTempo(Integer tempo) {
-        this.tempo = tempo;
+        this.Tempo = tempo;
     }
 
     /**
      * @return the biodados
      */
     public String getBiodados() {
-        return biodados;
+        return BioDados;
     }
 
     /**
      * @param biodados the biodados to set
      */
     public void setBiodados(String biodados) {
-        this.biodados = biodados;
+        this.BioDados = biodados;
     }
 
     /**
      * @return the id
      */
     public String getId() {
-        return id;
+        return ID;
     }
 
     /**
      * @param id the id to set
      */
     public void setId(String id) {
-        this.id = id;
+        this.ID = id;
     }
 
     /**
      * @return the pis
      */
     public String getPis() {
-        return pis;
+        return PIS;
     }
 
     /**
      * @param pis the pis to set
      */
     public void setPis(String pis) {
-        this.pis = pis;
+        this.PIS = pis;
     }
 
     /**
      * @return the passwd
      */
     public String getPasswd() {
-        return passwd;
+        return Passwd;
     }
 
     /**
      * @param passwd the passwd to set
      */
     public void setPasswd(String passwd) {
-        this.passwd = passwd;
+        this.Passwd = passwd;
     }    
 }
