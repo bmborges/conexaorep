@@ -15,8 +15,8 @@ import java.sql.SQLException;
  */
 public class Database {
   private static String
-	host = "jdbc:postgresql://localhost:5573/ctpp",
-//	host = "jdbc:postgresql://189.74.31.178:5573/ctpp",
+//	host = "jdbc:postgresql://localhost:5573/ctpp",
+	host = "jdbc:postgresql://189.74.31.178:5573/ctpp",
 //	host = "jdbc:postgresql://10.1.1.50:5573/ctpp",
 	user = "postgres",
 	password = "123", 

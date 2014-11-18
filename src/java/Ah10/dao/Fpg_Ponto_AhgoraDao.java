@@ -30,7 +30,7 @@ public class Fpg_Ponto_AhgoraDao {
     public Integer UltimoNsr(String nro_rep) throws SQLException{
         Integer rNsr = 0;
         
-        String query = "select max(nsr) + 1  as nsr from fpg_ponto_ahgora where nro_rep = ? or nro_rep is null";
+        String query = "select nsr + 1  as nsr from fpg_ponto_ahgora where nro_rep = ? order by nsr desc limit 1 ";
         stmt = conn.prepareStatement(query);
         stmt.setString(1, nro_rep);
         rs = stmt.executeQuery();
